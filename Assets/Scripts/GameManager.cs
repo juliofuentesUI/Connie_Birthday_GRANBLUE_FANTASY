@@ -94,9 +94,4 @@ public class GameManager : MonoBehaviour
             curCharPanel.SetActive(false);
         }
     }
-
-    // i think we should run THE STATE PATTERN in here!
-    void Update()
-    {
-    }
 }

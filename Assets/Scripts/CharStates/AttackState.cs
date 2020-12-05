@@ -9,7 +9,7 @@ public class AttackState : ICharState
         Debug.Log("CurrentState is Attack");
         //PERFORM YOUR ATTACK
         //all we do here is make sure the animation is finished playing
-        Debug.Log($"The current value of AnimatorStateInfo(0).noramlizedTime is : {thisCharacter.animator.GetCurrentAnimatorStateInfo(0).normalizedTime }");
+        //Debug.Log($"The current value of AnimatorStateInfo(0).noramlizedTime is : {thisCharacter.animator.GetCurrentAnimatorStateInfo(0).normalizedTime }");
         if (thisCharacter.animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1)
         {
             //we have finished playing attack animation, now return idleActive
@@ -33,7 +33,6 @@ public class AttackState : ICharState
         //activate rig, play animation.
         thisCharacter.attackRig.SetActive(true);
         thisCharacter.animator.Play(CharStateManager.CHAR_ATTACK);
-        //also play animation of the actual attack!!! 
-        //access thisCharacter.currentSkillObject!
+        thisCharacter.currentSkillObject.PlaySkillAnimation();
     }
 }
