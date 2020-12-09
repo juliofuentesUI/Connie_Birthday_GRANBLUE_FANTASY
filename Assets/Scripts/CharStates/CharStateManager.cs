@@ -9,37 +9,52 @@ public class CharStateManager : MonoBehaviour
     public ICharState idleInactiveState = new IdleInactiveState();
     public ICharState idleActiveState = new IdleActiveState();
     public ICharState attackState = new AttackState();
+    public ICharState buffState = new BuffState();
     public Animator animator;
     public bool isSelected;
     public bool isAttacking;
+    public bool isBuffing;
     public SkillObject currentSkillObject;
     //[SerializeField] List<GameObject> skillPrefabs;
     public Dictionary<string, SkillObject> skillDictionary = new Dictionary<string, SkillObject>();
 
-    //Const animation states
-    public const string CHAR_INACTIVE_IDLE = "character idle";
-    public const string CHAR_ACTIVE_IDLE = "idleActiveAnim";
-    public const string CHAR_ATTACK = "character attack";
+
+    //type in the name of the anim clips. type in manually in inspector
+    public string CHAR_INACTIVE_IDLE;
+    public string CHAR_ACTIVE_IDLE;
+    public string CHAR_ATTACK;
+    public string CHAR_HURT;
+    public string CHAR_BUFF;
 
     //we need hard references to the RIGS to enable/disable them.
     [SerializeField] public GameObject idleInactiveRig;
     [SerializeField] public GameObject attackRig;
     [SerializeField] public GameObject idleActiveRig;
+    [SerializeField] public GameObject hurtRig;
+    [SerializeField] public GameObject buffRig;
 
 
     public void InitAttack(string attackName)
     {
-        //access the attack animation in the dictionary.
-        Debug.Log("Init attack");
+        //could be a BUFF tho...
+        Debug.Log("Init attack or buff");
         SkillObject attackSkillObject;
         skillDictionary.TryGetValue(attackName, out attackSkillObject);
-        if (attackSkillObject != null)
+        if (attackSkillObject != null && attackSkillObject.skillType == "ATTACK")
         {
             //then initialize isAttacking to true. our state will react to it.
             //but we need to pass our AttackState the skillObject.
             isAttacking = true;
             currentSkillObject = attackSkillObject;
         } 
+        else if (attackSkillObject != null && attackSkillObject.skillType == "BUFF")
+        {
+            //wee need to trigger the BUFF state...how tho? well.. it can only transition to BUFF state from IDLEACTIVE
+            //so idle active needs to be told to go to BUFF state. 
+            //just follow the same pattern for now...
+            isBuffing = true;
+            currentSkillObject = attackSkillObject;
+        }
         else
         {
             return;

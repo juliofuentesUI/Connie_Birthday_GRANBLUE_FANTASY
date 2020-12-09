@@ -32,7 +32,7 @@ public class AttackState : ICharState
     {
         //activate rig, play animation.
         thisCharacter.attackRig.SetActive(true);
-        thisCharacter.animator.Play(CharStateManager.CHAR_ATTACK);
-        thisCharacter.currentSkillObject.PlaySkillAnimation();
+        thisCharacter.animator.Play(thisCharacter.CHAR_ATTACK);
+        thisCharacter.currentSkillObject.PlaySkillAnimation(GameManager.bossPosition);
     }
 }

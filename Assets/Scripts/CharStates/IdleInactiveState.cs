@@ -38,6 +38,6 @@ public class IdleInactiveState : ICharState
     {
         Debug.Log("InitState IdleInactiveState");
         thisCharacter.idleInactiveRig.SetActive(true);
-        thisCharacter.animator.Play(CharStateManager.CHAR_INACTIVE_IDLE);
+        thisCharacter.animator.Play(thisCharacter.CHAR_INACTIVE_IDLE);
     }
 }

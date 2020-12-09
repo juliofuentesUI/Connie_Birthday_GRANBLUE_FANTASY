@@ -8,6 +8,8 @@ public class IdleActiveState : ICharState
     {
         Debug.Log("CurrentState is IdleActiveState");
         //we must do it this way because ATTACKING takes precedence.
+        //this is very bad code because you don't know who the hell toggles isAttacking to true to begin with.
+        //we know its UI_ANIMControlller but still
         if (thisCharacter.isAttacking)
         {
             this.ExitState(thisCharacter);
@@ -17,6 +19,11 @@ public class IdleActiveState : ICharState
         {
             this.ExitState(thisCharacter);
             return thisCharacter.idleInactiveState;
+        }
+        else if (thisCharacter.isBuffing)
+        {
+            this.ExitState(thisCharacter);
+            return thisCharacter.buffState;
         }
         else
         {
@@ -34,6 +41,6 @@ public class IdleActiveState : ICharState
     public void InitState(CharStateManager thisCharacter)
     {
         thisCharacter.idleActiveRig.SetActive(true);
-        thisCharacter.animator.Play(CharStateManager.CHAR_ACTIVE_IDLE);
+        thisCharacter.animator.Play(thisCharacter.CHAR_ACTIVE_IDLE);
     }
 }
