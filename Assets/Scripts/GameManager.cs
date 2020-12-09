@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     public static Vector3 bossPosition { get; private set; }
     [SerializeField] GameObject bossInstance;
     public Vector3? targetPortraitPosition { get; private set; }
+    [SerializeField] public List<CharStateManager> currentCharacters;
     #pragma warning restore 0649
 
     private void Awake()
@@ -29,6 +30,15 @@ public class GameManager : MonoBehaviour
     {
         InitializeGame();
     }
+
+    public void AddCharacterToList(CharStateManager newCharacter)
+    {
+        if (newCharacter != null)
+        {
+            currentCharacters.Add(newCharacter);
+        }
+    }
+
 
     private void InitializeGame()
     {

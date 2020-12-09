@@ -33,8 +33,10 @@ public class BuffState : ICharState
         thisCharacter.animator.Play(thisCharacter.CHAR_BUFF);
         //because this is a buff..we need to make sure this plays in 3 diff positions...so...just call it 3 times!
         //each with the proper ally positions
-        thisCharacter.currentSkillObject.PlaySkillAnimation();
-        //thisCharacter.currentSkillObject.PlaySkillAnimation();
-        //thisCharacter.currentSkillObject.PlaySkillAnimation();
+        foreach(var character in thisCharacter.gameManager.currentCharacters)
+        {
+            //debug this later to ffind out the type.
+            thisCharacter.currentSkillObject.PlaySkillAnimation(character.transform.position);
+        }
     }
 }

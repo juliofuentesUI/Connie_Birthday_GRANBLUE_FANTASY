@@ -33,6 +33,8 @@ public class CharStateManager : MonoBehaviour
     [SerializeField] public GameObject hurtRig;
     [SerializeField] public GameObject buffRig;
 
+    //we need to add our gameInstance to the manager.
+    public GameManager gameManager;
 
     public void InitAttack(string attackName)
     {
@@ -63,6 +65,8 @@ public class CharStateManager : MonoBehaviour
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        gameManager = FindObjectOfType<GameManager>();
+        gameManager.AddCharacterToList(this);
     }
     void Start()
     {
