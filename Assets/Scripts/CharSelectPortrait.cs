@@ -55,6 +55,11 @@ public class CharSelectPortrait : MonoBehaviour
         characterName = name;
     }
 
+    public string GetCharName()
+    {
+        return this.characterName;
+    }
+
     public void SetPortraitImage(Sprite sprite)
     {
         image.sprite = sprite;

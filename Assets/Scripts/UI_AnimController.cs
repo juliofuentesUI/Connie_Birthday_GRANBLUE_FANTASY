@@ -30,6 +30,7 @@ public class UI_AnimController : MonoBehaviour
     [SerializeField] SkillData currentSelectedSkillObject;
     [SerializeField] CharStateManager currentSelectedSkillOwner;
     [SerializeField] Image textBubbleSkillCostWarning;
+    [SerializeField] TextMeshProUGUI characterNameTextField;
     #pragma warning restore 0649
     private void Awake()
     {
@@ -139,6 +140,7 @@ public class UI_AnimController : MonoBehaviour
         setVisible_BackButton(false);
         ToggleArrows();
         ToggleCommandPanels();
+        ClearCharacterNameText();
         foreach(var charPortrait in partySelectPortraits)
         {
             charPortrait.SetActive(true);
@@ -146,6 +148,19 @@ public class UI_AnimController : MonoBehaviour
             charPortrait.GetComponent<CharSelectPortrait>().GetOwner().isSelected = false;
             //by setting the owner to false. we ensure that they all return to idleINACTIVE states.
         }
+    }
+
+    private void ShowCharacterName()
+    {
+        //shows the currently selected characters name
+        string charName = partySelectPortraits[curCharIndex].GetComponent<CharSelectPortrait>().GetCharName();
+        characterNameTextField.text = charName;
+        //grab hard referenced text box to show name.
+    }
+
+    private void ClearCharacterNameText()
+    {
+        characterNameTextField.text = "";
     }
 
     private void MoveActivePanels(PointerEventData eventData)
@@ -163,6 +178,7 @@ public class UI_AnimController : MonoBehaviour
             partySelectPortraits[curCharIndex].GetComponent<CharSelectPortrait>().GetOwner().isSelected = true;
             Vector3 destination = new Vector3(curPos.x + Screen.width, curPos.y, curPos.z);
             IsAnimating(true);
+            ShowCharacterName();
             moveScript.MoveTo(destination, () => IsAnimating(false));
         }
 
@@ -175,6 +191,7 @@ public class UI_AnimController : MonoBehaviour
             partySelectPortraits[curCharIndex].GetComponent<CharSelectPortrait>().GetOwner().isSelected = true;
             Vector3 destination = new Vector3(curPos.x - Screen.width, curPos.y, curPos.z);
             IsAnimating(true);
+            ShowCharacterName();
             moveScript.MoveTo(destination, () => IsAnimating(false));
         }
     }
@@ -196,6 +213,7 @@ public class UI_AnimController : MonoBehaviour
         Vector3 targetPosition = gameManager.targetPortraitPosition.Value;
         MoveInactiveCommandPanels(curCharIndex);
         IsAnimating(true);
+        ShowCharacterName();
         curCharPortrait.GetComponent<Moveable>().MoveTo(targetPosition, ToggleCommandPanels, ToggleArrows, ResetPortraitPosition, () => IsAnimating(false));
     }
 
