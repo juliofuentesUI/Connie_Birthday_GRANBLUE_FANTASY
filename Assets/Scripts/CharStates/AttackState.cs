@@ -34,5 +34,6 @@ public class AttackState : ICharState
         thisCharacter.attackRig.SetActive(true);
         thisCharacter.animator.Play(thisCharacter.CHAR_ATTACK);
         thisCharacter.currentSkillObject.PlaySkillAnimation(GameManager.bossPosition);
+        thisCharacter.DecrementSkillCost();
     }
 }

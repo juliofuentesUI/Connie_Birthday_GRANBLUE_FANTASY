@@ -31,6 +31,7 @@ public class BuffState : ICharState
     {
         thisCharacter.buffRig.SetActive(true);
         thisCharacter.animator.Play(thisCharacter.CHAR_BUFF);
+        thisCharacter.DecrementSkillCost();
         //because this is a buff..we need to make sure this plays in 3 diff positions...so...just call it 3 times!
         //each with the proper ally positions
         foreach(var character in thisCharacter.gameManager.currentCharacters)

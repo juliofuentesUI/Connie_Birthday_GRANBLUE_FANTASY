@@ -17,6 +17,8 @@ public class CharStateManager : MonoBehaviour
     public SkillObject currentSkillObject;
     //[SerializeField] List<GameObject> skillPrefabs;
     public Dictionary<string, SkillObject> skillDictionary = new Dictionary<string, SkillObject>();
+    [SerializeField] int _skillCostRemaining;
+    public int skillCostRemaining { get { return _skillCostRemaining; } private set { _skillCostRemaining = value; } }
 
 
     //type in the name of the anim clips. type in manually in inspector
@@ -35,6 +37,31 @@ public class CharStateManager : MonoBehaviour
 
     //we need to add our gameInstance to the manager.
     public GameManager gameManager;
+
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+        gameManager = FindObjectOfType<GameManager>();
+        gameManager.AddCharacterToList(this);
+        skillCostRemaining = 2;
+    }
+    void Start()
+    {
+        currentState = idleInactiveState;
+        currentState.InitState(this);
+    }
+
+    public void DecrementSkillCost()
+    {
+        //should get called anytime we go to BuffState or AttackState.
+        skillCostRemaining--;
+    }
+
+    public void ResetSkillCost()
+    {
+        //this should only happen when going from EnemyTurn to PlayerTurn transition.
+        skillCostRemaining = 2;
+    }
 
     public void InitAttack(string attackName)
     {
@@ -62,17 +89,10 @@ public class CharStateManager : MonoBehaviour
             return;
         }
     }
-    private void Awake()
-    {
-        animator = GetComponent<Animator>();
-        gameManager = FindObjectOfType<GameManager>();
-        gameManager.AddCharacterToList(this);
-    }
-    void Start()
-    {
-        currentState = idleInactiveState;
-        currentState.InitState(this);
-    }
+
+
+
+
 
     // Update is called once per frame
     void Update()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using TMPro;
+using UnityEngine.UI;
 
 // I want this class to be responsible for animating INTO charCommand panels
 // and manipulating the carousel of charCommandPanels.
@@ -28,6 +29,7 @@ public class UI_AnimController : MonoBehaviour
     [SerializeField] string currentSelectedSkill;
     [SerializeField] SkillData currentSelectedSkillObject;
     [SerializeField] CharStateManager currentSelectedSkillOwner;
+    [SerializeField] Image textBubbleSkillCostWarning;
     #pragma warning restore 0649
     private void Awake()
     {
@@ -40,10 +42,6 @@ public class UI_AnimController : MonoBehaviour
         Debug.Log($"carouseloriginPos.y : {carouselOriginPos.y}");
         Debug.Log($"carouseloriginPos.x : {carouselOriginPos.x}");
         //each charCommandPanels has a public int prop called charSelectIndex, now i can dynamically access them.
-    }
-    void Update()
-    {
-
     }
 
     public void ProcessClickRelay(PointerEventData eventData)
@@ -81,11 +79,25 @@ public class UI_AnimController : MonoBehaviour
         //this isDisabled line may not even have to run because...were going to block it from coming into ui_anim at all.
         if (currentSelectedSkillObject.IsDisabled()) return;
         CharStateManager owner = currentSelectedSkillOwner;
-        owner.InitAttack(currentSelectedSkill);
-        //pass to the owner the string name of the skill used. and remember to disable the skill.
-        currentSelectedSkillObject.DisableSkill();
-        ResetCurrentSkillSelection();
-        //after this attack. DISABLE THE SKILL. TurnSystem.CS will re-enable it for us.
+        //check first with that owner.skillCost > 0
+        //if so, owner.InitAttack(currentSelectedSKill), then disableSkill() and resetSkillSelection(); and owner skillCost--;
+        if (owner.skillCostRemaining > 0)
+        {
+            owner.InitAttack(currentSelectedSkill);
+            currentSelectedSkillObject.DisableSkill();
+            ResetCurrentSkillSelection();
+        }
+        else
+        {
+            //ELSE that means we are out of skills. so invoke an "OUT OF SKILL POINTS" event that the MASTER ANIMATOR listens to.
+            //after invoking it, disable that last un-usable skill via currentSleected disablskill() and ResetCurrentSkillSellection()
+            //now all skills are un-interactable.!
+            //invoke OUT OF SKILL POINTS method here.
+            StartCoroutine(ShowSkillCostDepletedBubble());
+            currentSelectedSkillObject.DisableSkill();
+            ResetCurrentSkillSelection();
+        }
+        //remember to re-enable skills with TurnSystem.CS
     }
 
     private void SetCurrentSkillSelected(SkillData skillData)
@@ -197,6 +209,16 @@ public class UI_AnimController : MonoBehaviour
                                              carouselOriginPos.y, 0);
         Debug.Log($"carouseloriginPos.y AFTER MOVING : {carouselOriginPos.y}");
         
+    }
+
+    private IEnumerator ShowSkillCostDepletedBubble()
+    {
+        //warn them that their skills are gone.
+        //move the warning bubble to be above the cahracter
+        //move the bubble to the position of current owner.
+        textBubbleSkillCostWarning.gameObject.SetActive(true);
+        yield return new WaitForSeconds(1.5f);
+        textBubbleSkillCostWarning.gameObject.SetActive(false);
     }
 
     private void setVisible_AffinityChart(bool visible)
