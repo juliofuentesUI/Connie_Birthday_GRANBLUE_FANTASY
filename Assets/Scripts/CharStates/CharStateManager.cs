@@ -44,6 +44,9 @@ public class CharStateManager : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
         gameManager.AddCharacterToList(this);
         skillCostRemaining = 2;
+        //add the resetSkillCost method to the IsPlayerTurn event from TurnSystem.cs, so everytime it is players Turn they get their skills back.
+        //you gotta make sure AI_ANIM listens also and makes all the skills .interactable = true again.
+        FindObjectOfType<TurnSystem>().beginPlayerTurn += ResetSkillCost;
     }
     void Start()
     {

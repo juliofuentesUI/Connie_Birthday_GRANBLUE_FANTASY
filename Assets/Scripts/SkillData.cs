@@ -73,7 +73,7 @@ public class SkillData : MonoBehaviour
     public void EnableSkill()
     {
         //ENABLE SKILL WILL BE CALLED AFTER BOSS'S TURN IN TURNSYSTEM.CS!
-        isDisabled = true;
+        isDisabled = false;
         skillButton.interactable = true;
     }
 

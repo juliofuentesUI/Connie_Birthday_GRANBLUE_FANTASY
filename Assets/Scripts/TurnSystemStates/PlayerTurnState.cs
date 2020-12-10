@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerTurnState : MonoBehaviour, ITurnState
+public class PlayerTurnState : ITurnState
 {
     //Currently, TurnSystem is only reacting to UI_ANIMCONTROLLER 
     public ITurnState DoState(TurnSystem turnSystem)
     {
         //here...
-        if (turnSystem.isPlayerTurn == false)
+        if (TurnSystem.isPlayerTurn == false)
         {
             return turnSystem.enemyTurnState;
         }
@@ -20,7 +20,7 @@ public class PlayerTurnState : MonoBehaviour, ITurnState
 
     public void ExitState(TurnSystem turnSystem)
     {
-        //invoke some delegates?
+        //not much to do here i think.
     }
 
     public void InitState(TurnSystem turnSystem)

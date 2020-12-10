@@ -9,7 +9,7 @@ public class TurnSystem : MonoBehaviour
     public ITurnState playerTurnState = new PlayerTurnState();
     public ITurnState enemyTurnState = new EnemyTurnState();
     private ITurnState newState;
-    public bool isPlayerTurn { get; private set; }
+    public static bool isPlayerTurn { get; private set; }
 
 
     //Action events for other ppl to animate to. like a master animator.cs class
@@ -19,7 +19,10 @@ public class TurnSystem : MonoBehaviour
     void Start()
     {
         currentState = playerTurnState;
+        isPlayerTurn = true;
+        currentState.InitState(this);
         FindObjectOfType<UI_AnimController>().skipTurnDelegate += () => isPlayerTurn = false;
+        FindObjectOfType<BossStateManager>().endBossTurn += () => isPlayerTurn = true;
         //go create the enemyAISTATE MACHINE.
         //FindObjectOfType<EnemyAIStateMachine>().attackOverDelegate += () => isPlayerTurn = true;
     }

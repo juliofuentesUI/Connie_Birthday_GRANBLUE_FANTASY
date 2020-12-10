@@ -14,6 +14,7 @@ public class UI_AnimController : MonoBehaviour
     GameManager gameManager;
     GameObject[] charCommandPanels;
     GameObject[] partySelectPortraits;
+    SkillData[] allSkills;
     GameObject curCharPortrait;
     GameObject commandCarousel;
     Vector3 carouselOriginPos;
@@ -35,6 +36,7 @@ public class UI_AnimController : MonoBehaviour
     [SerializeField] Image skipTurnButton;
 
     public event Action skipTurnDelegate;
+
     #pragma warning restore 0649
     private void Awake()
     {
@@ -44,9 +46,9 @@ public class UI_AnimController : MonoBehaviour
         carouselOriginPos = commandCarousel.transform.position;
         totalCharsLength = gameManager.heroConfig.Count;
         moveScript = commandCarousel.GetComponent<Moveable>();
-        Debug.Log($"carouseloriginPos.y : {carouselOriginPos.y}");
-        Debug.Log($"carouseloriginPos.x : {carouselOriginPos.x}");
         //each charCommandPanels has a public int prop called charSelectIndex, now i can dynamically access them.
+        //add EnableAllSkills to the TurnSystem beginPlayerTurn delegate.
+        FindObjectOfType<TurnSystem>().beginPlayerTurn += EnableAllSkills;
     }
 
     public void ProcessClickRelay(PointerEventData eventData)
@@ -133,6 +135,20 @@ public class UI_AnimController : MonoBehaviour
         currentSelectedSkill = "";
         currentSelectedSkillObject = null;
         currentSelectedSkillOwner = null;
+    }
+
+    private void EnableAllSkills()
+    {
+        //loop through all the objects of type SkillData and call EnableSKill
+        //skillData buttons do not exist at compile time..ummm
+        //this search takes time...but fuck it
+        //how do cache stuff that is created AFTER eerything.?
+        Debug.Log($"ENABLE ALL SKILLS HAS GOTTEN CALLED");
+        allSkills = commandCarousel.GetComponentsInChildren<SkillData>(true);
+        foreach(SkillData skill in allSkills)
+        {
+            skill.EnableSkill();
+        }
     }
 
     private void ShowSkillInfo(PointerEventData eventData)
