@@ -1,0 +1,37 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class TurnSystem : MonoBehaviour
+{
+    [SerializeField] ITurnState currentState;
+    public ITurnState playerTurnState = new PlayerTurnState();
+    public ITurnState enemyTurnState = new EnemyTurnState();
+    private ITurnState newState;
+    public bool isPlayerTurn { get; private set; }
+
+
+    //Action events for other ppl to animate to. like a master animator.cs class
+    public Action beginPlayerTurn;
+    public Action beginEnemyTurn;
+
+    void Start()
+    {
+        currentState = playerTurnState;
+        FindObjectOfType<UI_AnimController>().skipTurnDelegate += () => isPlayerTurn = false;
+        //go create the enemyAISTATE MACHINE.
+        //FindObjectOfType<EnemyAIStateMachine>().attackOverDelegate += () => isPlayerTurn = true;
+    }
+
+    void Update()
+    {
+        newState = currentState.DoState(this);
+        if (newState != currentState)
+        {
+            currentState = newState;
+            currentState.InitState(this);
+        }
+        
+    }
+}

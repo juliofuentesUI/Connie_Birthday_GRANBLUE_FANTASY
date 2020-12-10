@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -31,6 +32,9 @@ public class UI_AnimController : MonoBehaviour
     [SerializeField] CharStateManager currentSelectedSkillOwner;
     [SerializeField] Image textBubbleSkillCostWarning;
     [SerializeField] TextMeshProUGUI characterNameTextField;
+    [SerializeField] Image skipTurnButton;
+
+    public event Action skipTurnDelegate;
     #pragma warning restore 0649
     private void Awake()
     {
@@ -69,9 +73,25 @@ public class UI_AnimController : MonoBehaviour
             case "AttackButton":
                 RelayAttack(eventData);
                 break;
+            case "SkipTurn":
+                //let turn system.cs know WE'RE ENDING OUR TURN.
+                SkipTurn();
+                break;
             default:
                 break;
         }
+    }
+
+    private void SkipTurn()
+    {
+        //notify our TurnSystem.cs with a delegate!
+        skipTurnDelegate?.Invoke();
+        //be wary that our Skip Button should be disabled too and re-enabled for safety. 
+    }
+
+    private void ShowSkipTurnButton(bool visibleBool)
+    {
+        skipTurnButton.gameObject.SetActive(visibleBool);
     }
 
     private void RelayAttack(PointerEventData eventData)
@@ -136,6 +156,7 @@ public class UI_AnimController : MonoBehaviour
     private void ShowPartySelect()
     {
         //basically when you press the BACK BUTTON
+        ShowSkipTurnButton(true);
         setVisible_AffinityChart(true);
         setVisible_BackButton(false);
         ToggleArrows();
@@ -208,6 +229,7 @@ public class UI_AnimController : MonoBehaviour
             if (charPortrait != curCharPortrait)
                 charPortrait.SetActive(false);
         }
+        ShowSkipTurnButton(false);
         setVisible_AffinityChart(false);
         setVisible_BackButton(true);
         Vector3 targetPosition = gameManager.targetPortraitPosition.Value;
