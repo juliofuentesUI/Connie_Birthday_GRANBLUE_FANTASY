@@ -30,6 +30,14 @@ public class BossAttackState : IBossState
         //activate rig and play anim
         boss.attackRig.SetActive(true);
         boss.animator.Play(boss.BOSS_ATTACK_ANIM_NAME);
+        //create a random integer. and play that animation
+        GameObject selectedBossSkill = boss.bossSkillPrefabs[Random.Range(0, 3)];
+        //instantiate this bitch.
+        //add target later on
+        GameObject skillInstance = GameObject.Instantiate(selectedBossSkill);
+        skillInstance.SetActive(true);
+        skillInstance.GetComponent<Animator>().SetTrigger("triggerSkill");
+
         //this only plays the RIGS animation. not the skill objects.
         //make sure here we pick a random skill..then we wait for animator to finish b4 going back to IdleInactive state. 
         //remember to ExitState properly, change bools , call the right delegates etc.
