@@ -13,19 +13,34 @@ public class GameManager : MonoBehaviour
     //heroConfig is hardcoded for now. make sure it isn't after
     [SerializeField] public List<ScriptableHero> heroConfig;
     public List<GameObject> allCommandPanels;
-    public Vector3? targetPortraitPosition;
+    public static Vector3 bossPosition { get; private set; }
+    [SerializeField] GameObject bossInstance;
+    public Vector3? targetPortraitPosition { get; private set; }
+    [SerializeField] public List<CharStateManager> currentCharacters;
+    [SerializeField] AudioClip BattleQuestBG01;
     #pragma warning restore 0649
 
     private void Awake()
     {
         //step 1. Stub in portrait details and name for portrait.
         //in the meantime, just use these dummy images.
+        bossPosition = bossInstance.GetComponent<Transform>().position;
     }
 
     private void Start()
     {
         InitializeGame();
+        SoundManager.Instance.PlayMusic(BattleQuestBG01);
     }
+
+    public void AddCharacterToList(CharStateManager newCharacter)
+    {
+        if (newCharacter != null)
+        {
+            currentCharacters.Add(newCharacter);
+        }
+    }
+
 
     private void InitializeGame()
     {
@@ -70,9 +85,13 @@ public class GameManager : MonoBehaviour
             curCharPortrait.SetCharIndex(i);
 
             //if error, check where hero is instantiated.
-            curHero = Instantiate(heroConfig[i].GetHeroPrefab());
+            curHero = Instantiate(heroConfig[i].GetHeroPrefab(), heroConfig[i].GetSpawnPosition(), Quaternion.identity);
+            //curHero = Instantiate(heroConfig[i].GetHeroPrefab());
             CharStateManager charStatemanager = curHero.GetComponent<CharStateManager>();
             partySelectPortraits[i].GetComponent<CharSelectPortrait>().SetOwner(charStatemanager);
+            //experimental line below
+            curCharPortrait.SetOwner(charStatemanager);
+            //experimental line above
             skillsConfig = heroConfig[i].GetCharSkills();
             for (int j = 0; j < skillsConfig.Length; j++)
             {

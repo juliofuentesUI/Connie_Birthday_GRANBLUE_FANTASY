@@ -14,9 +14,19 @@ public class SkillObject
 
     public void PlaySkillAnimation(Vector3? targetPosition = null)
     {
+        GameObject skillPrefabHandle;
         //DONT FORGET TARGETPOSITION
-        GameObject skillPrefabHandle = GameObject.Instantiate(skillAnimPrefab);
-        skillPrefabHandle.SetActive(true);
+        if (targetPosition.HasValue)
+        {
+            skillPrefabHandle = GameObject.Instantiate(skillAnimPrefab, targetPosition.Value, Quaternion.identity);
+        }
+        else
+        {
+            //we should always have a target though... so this should almost never run.
+            skillPrefabHandle = GameObject.Instantiate(skillAnimPrefab);
+        }
+        //skiLL prefab will come with an active parent, but inActive children.
+        //skillPrefabHandle.SetActive(true);
         Animator animator = skillPrefabHandle.GetComponent<Animator>();
         animator.Play(skillAnimationClipName);
     }

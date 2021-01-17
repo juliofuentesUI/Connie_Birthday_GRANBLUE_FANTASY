@@ -16,6 +16,7 @@ public class ScriptableHero : ScriptableObject
     //char animations.
     //might make them dictionary to know they're names
     [SerializeField] AnimationClip[] animations;
+    [SerializeField] GameObject spawnPosition;
     //attack data etc.
     #pragma warning restore 0649
 
@@ -36,5 +37,10 @@ public class ScriptableHero : ScriptableObject
     public GameObject GetHeroPrefab()
     {
         return characterPrefab;
+    }
+
+    public Vector3 GetSpawnPosition()
+    {
+        return spawnPosition.GetComponent<Transform>().position;
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +12,8 @@ public class CharSelectPortrait : MonoBehaviour
     public string characterName { get; private set; }
     private Image image;
     public CharStateManager owner;
+
+    public Action ownerHasBeenSet;
 
     //this script doesn't do much except hold basic information about charSelectPortraits.
     void Awake()
@@ -38,6 +41,7 @@ public class CharSelectPortrait : MonoBehaviour
     public void SetOwner(CharStateManager owner)
     {
         this.owner = owner;
+        ownerHasBeenSet?.Invoke();
     }
 
     public CharStateManager GetOwner()
@@ -53,6 +57,11 @@ public class CharSelectPortrait : MonoBehaviour
     public void SetCharName(string name)
     {
         characterName = name;
+    }
+
+    public string GetCharName()
+    {
+        return this.characterName;
     }
 
     public void SetPortraitImage(Sprite sprite)

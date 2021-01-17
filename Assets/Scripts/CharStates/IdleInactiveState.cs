@@ -9,7 +9,14 @@ public class IdleInactiveState : ICharState
         Debug.Log("CurrentState is idleINACTIVE state");
         //return some iCharState or null FOR NOW
         // this can only transition to IdleActive or HURT
-        //condition should be... if a player is selected.
+        //condition should be... if a player is selected
+        if (thisCharacter.isHurt)
+        {
+            this.ExitState(thisCharacter);
+            return thisCharacter.hurtState;
+        }
+
+
         if (thisCharacter.isSelected)
         {
             //if this character is selected, then switch to IdleActive state, and in that state play the idleActiveAnim
@@ -38,6 +45,6 @@ public class IdleInactiveState : ICharState
     {
         Debug.Log("InitState IdleInactiveState");
         thisCharacter.idleInactiveRig.SetActive(true);
-        thisCharacter.animator.Play(CharStateManager.CHAR_INACTIVE_IDLE);
+        thisCharacter.animator.Play(thisCharacter.CHAR_INACTIVE_IDLE);
     }
 }

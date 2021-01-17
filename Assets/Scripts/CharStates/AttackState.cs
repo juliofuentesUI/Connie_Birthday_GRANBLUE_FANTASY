@@ -32,7 +32,13 @@ public class AttackState : ICharState
     {
         //activate rig, play animation.
         thisCharacter.attackRig.SetActive(true);
-        thisCharacter.animator.Play(CharStateManager.CHAR_ATTACK);
-        thisCharacter.currentSkillObject.PlaySkillAnimation();
+        thisCharacter.animator.Play(thisCharacter.CHAR_ATTACK);
+        SoundManager.Instance.Play(thisCharacter.attackAudioList[Random.Range(0, thisCharacter.attackAudioList.Count - 1)]);
+        thisCharacter.currentSkillObject.PlaySkillAnimation(GameManager.bossPosition);
+        thisCharacter.DecrementSkillCost();
+        //invoke a delegate here to let BossState and anyone elser who cares that this player has begun an attack.
+        // you can even pass thisCharacter as an argument
+        // AH YES..PASS IN A DELAY FLOAT DEPENDING ON THE SKILL
+        // thisCharacter.playerAttackStart?.Invoke(0);
     }
 }
